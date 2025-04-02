@@ -3,6 +3,7 @@ import { Loader2 } from 'lucide-react';
 import { SignIn, ClerkLoaded, ClerkLoading } from '@clerk/nextjs'
 
 
+
 export default function Page() {
   return (
     <div className='min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-gradient-to-r from-[#12122b] to-[#0e0e1d]'>

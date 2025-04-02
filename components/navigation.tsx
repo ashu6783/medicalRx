@@ -8,10 +8,10 @@ import { NavButton } from "./nav-button" // Import the NavButton component
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet"
 
 const routes = [
-    {
-        href: '/',
-        label: "Overview",
-    },
+    // {
+    //     href: '/overview',
+    //     label: "Overview",
+    // },
     {
         href: '/diagnosis',
         label: "Diagnosis🔍",
