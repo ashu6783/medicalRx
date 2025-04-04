@@ -2,8 +2,20 @@
 
 import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
+// Custom Leaflet Marker Icon
+const customIcon = L.icon({
+    iconUrl: "/marker-icon.png",
+    shadowUrl: "/marker-shadow.png",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+});
+
+// Location Interface
 interface Location {
     lat: number;
     lon: number;
@@ -15,7 +27,7 @@ export default function Map() {
     const [places, setPlaces] = useState<Location[]>([]);
     const [searchType, setSearchType] = useState("hospital");
 
-  
+    // Get User's Current Location
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(
             (position) => {
@@ -29,6 +41,7 @@ export default function Map() {
         );
     }, []);
 
+    // Fetch Nearby Places using Overpass API
     const fetchPlaces = async (type: string) => {
         if (!userLocation) return;
 
@@ -58,7 +71,7 @@ export default function Map() {
             const results = data.elements.map((element: OverpassElement) => ({
                 lat: element.lat || element.center?.lat,
                 lon: element.lon || element.center?.lon,
-                name: element.tags?.name || "Unnamed",
+                name: element.tags?.name || "Unnamed Location",
             }));
 
             setPlaces(results);
@@ -68,13 +81,14 @@ export default function Map() {
     };
 
     return (
-        <div className="w-full h-[500px] relative">
-            {/* Search Options */}
-            <div className="absolute top-4 left-4 bg-white p-2 rounded shadow-md z-10">
+        <div className="w-full flex flex-col lg:flex-row gap-4">
+            {/* Left Panel: Search & List of Places */}
+            <div className="lg:w-1/3 w-full bg-white shadow-md p-4 rounded">
+                <h2 className="text-lg font-bold mb-3">Find Nearby {searchType}s</h2>
                 <select
                     value={searchType}
                     onChange={(e) => setSearchType(e.target.value)}
-                    className="p-2 border"
+                    className="w-full p-2 border rounded"
                 >
                     <option value="hospital">Hospitals</option>
                     <option value="pharmacy">Pharmacies</option>
@@ -82,30 +96,46 @@ export default function Map() {
                 </select>
                 <button
                     onClick={() => fetchPlaces(searchType)}
-                    className="ml-2 px-4 py-2 bg-blue-500 text-white rounded"
+                    className="w-full mt-2 px-4 py-2 bg-blue-500 text-white rounded"
                 >
                     Search
                 </button>
+
+                {/* List of Top 10 Nearby Places */}
+                {places.length > 0 && (
+                    <div className="mt-4">
+                        <h2 className="text-lg font-bold">Top 10 {searchType}s Nearby</h2>
+                        <ul className="list-disc pl-5 mt-2">
+                            {places.slice(0, 10).map((place, index) => (
+                                <li key={index} className="mb-1">
+                                    {place.name} - ({place.lat.toFixed(4)}, {place.lon.toFixed(4)})
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
             </div>
 
-            {/* Leaflet Map */}
-            {userLocation && (
-                <MapContainer center={[userLocation.lat, userLocation.lon]} zoom={13} className="h-full w-full">
-                    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            {/* Right Panel: Map */}
+            <div className="lg:w-2/3 w-full h-[500px] rounded overflow-hidden">
+                {userLocation && (
+                    <MapContainer center={[userLocation.lat, userLocation.lon]} zoom={13} className="h-full w-full">
+                        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-                    {/* User Location Marker */}
-                    <Marker position={[userLocation.lat, userLocation.lon]}>
-                        <Popup>You are here!</Popup>
-                    </Marker>
-
-                    {/* Nearby Places Markers */}
-                    {places.map((place, index) => (
-                        <Marker key={index} position={[place.lat, place.lon]}>
-                            <Popup>{place.name}</Popup>
+                        {/* User Location Marker */}
+                        <Marker position={[userLocation.lat, userLocation.lon]} icon={customIcon}>
+                            <Popup>You are here!</Popup>
                         </Marker>
-                    ))}
-                </MapContainer>
-            )}
+
+                        {/* Nearby Places Markers */}
+                        {places.map((place, index) => (
+                            <Marker key={index} position={[place.lat, place.lon]} icon={customIcon}>
+                                <Popup>{place.name}</Popup>
+                            </Marker>
+                        ))}
+                    </MapContainer>
+                )}
+            </div>
         </div>
     );
 }
