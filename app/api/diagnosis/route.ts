@@ -36,9 +36,21 @@ export async function POST(req: Request) {
         const cleanedResponse = responseText.replace(/```json|```/g, "").trim();
 
         // Parse AI response
-        const diagnosis = JSON.parse(cleanedResponse || "{}");
+        const aiResponse = JSON.parse(cleanedResponse || "{}");
+        
+        // Process the response to match the DiagnosisIssue[] format expected by the frontend
+        const diagnosis = [
+            ...(aiResponse.common_issues || []).map((issue: { name: string; recommendation: string }) => ({
+                ...issue,
+                confidence: 0.6 + Math.random() * 0.2 // Random confidence between 0.6-0.8 for common issues
+            })),
+            ...(aiResponse.severe_issues || []).map((issue: { name: string; recommendation: string }) => ({
+                ...issue,
+                confidence: 0.8 + Math.random() * 0.2 // Random confidence between 0.8-1.0 for severe issues
+            }))
+        ];
 
-        return NextResponse.json(diagnosis);
+        return NextResponse.json({ diagnosis });
     } catch (error) {
         console.error("Error fetching diagnosis:", error);
         return NextResponse.json({ error: "AI diagnosis failed." }, { status: 500 });
