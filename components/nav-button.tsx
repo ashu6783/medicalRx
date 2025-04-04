@@ -6,7 +6,7 @@ import { Button } from "./ui/button"
 
 type Props = {
     href: string;
-    label: string;
+    label: React.ReactNode;
     isActive?: boolean;
 }
 
