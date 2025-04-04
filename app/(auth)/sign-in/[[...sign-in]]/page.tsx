@@ -23,8 +23,8 @@ export default function Page() {
           "Let&apos;s make healthcare simpler!"
         ],
 
-        typeSpeed: 300,
-        backSpeed: 200,
+        typeSpeed: 50,
+        backSpeed: 30,
         loop: true,
       });
 
@@ -43,8 +43,8 @@ export default function Page() {
           "Stay healthy, stay happy!",
           "Let&apos;s make healthcare simpler!"
         ],
-        typeSpeed: 300,
-        backSpeed: 200,
+        typeSpeed: 50,
+        backSpeed: 30,
         loop: true,
       });
 
