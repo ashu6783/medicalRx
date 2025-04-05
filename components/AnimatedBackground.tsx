@@ -8,7 +8,6 @@ import * as THREE from 'three';
 function FloatingParticles() {
     const ref = useRef<THREE.Points>(null);
 
-    // Memoize the particle positions to prevent re-creation on re-render
     const positions = useMemo(() => {
         const temp = new Float32Array(6000);
         for (let i = 0; i < 2000; i++) {
@@ -19,7 +18,6 @@ function FloatingParticles() {
         return temp;
     }, []);
 
-    // Animation using requestAnimationFrame
     useEffect(() => {
         let frameId: number;
 
@@ -32,7 +30,7 @@ function FloatingParticles() {
         };
 
         animate();
-        return () => cancelAnimationFrame(frameId); // Cleanup on unmount
+        return () => cancelAnimationFrame(frameId);
     }, []);
 
     return (

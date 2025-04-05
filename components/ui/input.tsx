@@ -1,4 +1,3 @@
-// components/ui/Input.tsx
 import React from 'react';
 
 export const Input = ({ className = '', ...props }: React.InputHTMLAttributes<HTMLInputElement>) => (

@@ -4,7 +4,7 @@ import { useState } from "react";
 interface DiagnosisIssue {
     name: string;
     recommendation: string;
-    confidence: number; // Confidence score for refinement options
+    confidence: number;
 }
 
 export default function DiagnosisPage() {

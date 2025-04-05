@@ -1,11 +1,9 @@
-"use client";
-
+import { User, Bed, FileText, Globe, Clock, Trash2, Phone, AlertTriangle, Accessibility, MapPin } from 'lucide-react';
 import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-// Default Marker
 const customIcon = L.icon({
     iconUrl: "/marker-icon.png",
     shadowUrl: "/marker-shadow.png",
@@ -15,7 +13,6 @@ const customIcon = L.icon({
     shadowSize: [41, 41],
 });
 
-// Highlighted Marker (Emergency/Speciality match)
 const redIcon = L.icon({
     iconUrl: "/marker-icon-red.png",
     shadowUrl: "/marker-shadow.png",
@@ -25,7 +22,6 @@ const redIcon = L.icon({
     shadowSize: [41, 41],
 });
 
-// Location Interface
 interface Location {
     lat: number;
     lon: number;
@@ -225,18 +221,108 @@ export default function Map() {
                                     <Popup>
                                         <div>
                                             <strong>{place.name}</strong>
-                                            {place.speciality && (<><br /><span>🩺 Speciality: {place.speciality}</span></>)}
-                                            {place.operator && (<><br /><span>🏢 Operator: {place.operator}</span></>)}
-                                            {place.beds && (<><br /><span>🛏 Beds: {place.beds}</span></>)}
-                                            {place.insurance && (<><br /><span>🧾 Insurance: {place.insurance}</span></>)}
-                                            {place.languages && (<><br /><span>🗣️ Languages: {place.languages}</span></>)}
-                                            {place.openingHours && (<><br /><span>🕒 Hours: {place.openingHours}</span></>)}
-                                            {place.covidHours && (<><br /><span>🦠 COVID Hours: {place.covidHours}</span></>)}
-                                            {place.address && (<><br /><span>📍 {place.address}</span></>)}
-                                            {place.phone && (<><br /><span>📞 {place.phone}</span></>)}
-                                            {place.website && (<><br /><span>🌐 <a href={place.website} target="_blank" className="text-blue-500 underline">Website</a></span></>)}
-                                            {place.wheelchair && (<><br /><span>♿ Accessible: {place.wheelchair}</span></>)}
-                                            {place.emergency && (<><br /><span>🚨 Emergency: {place.emergency}</span></>)}
+                                            <br />
+                                            {place.speciality && (
+                                                <>
+                                                    <br />
+                                                    <span className='flex items-center'>
+                                                        <User className='mr-2' size={16} color="green" /> Speciality: {place.speciality}
+                                                    </span>
+                                                </>
+                                            )}
+                                            {place.operator && (
+                                                <>
+                                                    <br />
+                                                    <span className='flex items-center'>
+                                                        <User className='mr-2' size={16} color="blue" /> Operator: {place.operator}
+                                                    </span>
+                                                </>
+                                            )}
+                                            {place.beds && (
+                                                <>
+                                                    <br />
+                                                    <span className='flex items-center'>
+                                                        <Bed className='mr-2' size={16} color="orange" /> Beds: {place.beds}
+                                                    </span>
+                                                </>
+                                            )}
+                                            {place.insurance && (
+                                                <>
+                                                    <br />
+                                                    <span className='flex items-center'>
+                                                        <FileText className='mr-2' size={16} color="purple" /> Insurance: {place.insurance}
+                                                    </span>
+                                                </>
+                                            )}
+                                            {place.languages && (
+                                                <>
+                                                    <br />
+                                                    <span className='flex items-center'>
+                                                        <Globe className='mr-2' size={16} color="blue" /> Languages: {place.languages}
+                                                    </span>
+                                                </>
+                                            )}
+                                            {place.openingHours && (
+                                                <>
+                                                    <br />
+                                                    <span className='flex items-center'>
+                                                        <Clock className='mr-2' size={16} color="gray" /> Hours: {place.openingHours}
+                                                    </span>
+                                                </>
+                                            )}
+                                            {place.covidHours && (
+                                                <>
+                                                    <br />
+                                                    <span className='flex items-center'>
+                                                        <Trash2 className='mr-2' size={16} color="red" /> COVID Hours: {place.covidHours}
+                                                    </span>
+                                                </>
+                                            )}
+                                            {place.address && (
+                                                <>
+                                                    <br />
+                                                    <span className='flex items-center'>
+                                                        <MapPin className='mr-2' size={16} color="black" /> {place.address}
+                                                    </span>
+                                                </>
+                                            )}
+                                            {place.phone && (
+                                                <>
+                                                    <br />
+                                                    <span className='flex items-center'>
+                                                        <Phone className='mr-2' size={16} color="green" /> {place.phone}
+                                                    </span>
+                                                </>
+                                            )}
+                                            {place.website && (
+                                                <>
+                                                    <br />
+                                                    <span className='flex items-center'>
+                                                        <Globe className='mr-2' size={16} color="blue" />{' '}
+                                                        <a href={place.website} target="_blank" className="text-blue-500">
+                                                            Visit Website
+                                                        </a>
+                                                    </span>
+                                                </>
+                                            )}
+                                            {place.wheelchair && (
+                                                <>
+                                                    <br />
+                                                    <span className='flex items-center'>
+                                                        <Accessibility className='mr-2' size={16} color="yellow" /> Wheelchair:{" "}
+                                                        {place.wheelchair}
+                                                    </span>
+                                                </>
+                                            )}
+                                            {place.emergency && (
+                                                <>
+                                                    <br />
+                                                    <span className='flex items-center'>
+                                                        <AlertTriangle className='mr-2' size={16} color="red" />
+                                                        <span>Emergency: {place.emergency}</span>
+                                                    </span>
+                                                </>
+                                            )}
                                         </div>
                                     </Popup>
                                 </Marker>
