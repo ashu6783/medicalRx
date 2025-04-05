@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+// import Image from 'next/image';
+// import loadingImage from "@/public/circle.svg";
 
 const customIcon = L.icon({
     iconUrl: "/marker-icon.png",
@@ -292,6 +294,7 @@ export default function Map() {
                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
+                                {/* <Image src={loadingImage} alt="loading gif" /> */}
                                 Searching...
                             </>
                         ) : (
@@ -391,6 +394,7 @@ export default function Map() {
                         </Marker>
 
                         {places.map((place, index) => {
+                            // Check if this place should be highlighted
                             const isHighlighted =
                                 (place.speciality &&
                                     specialityFilter &&
@@ -403,7 +407,7 @@ export default function Map() {
                                 <Marker key={index} position={[place.lat, place.lon]} icon={markerIcon}>
                                     <Popup className="facility-popup">
                                         <div className="popup-content">
-                                            <h3 className="text-lg font-bold text-black mb-2">{place.name}</h3>
+                                            <h3 className="text-[24px] font-bold text-blue-700 mb-2">{place.name}</h3>
 
                                             <div className="space-y-2 text-sm">
                                                 {place.speciality && (
@@ -503,13 +507,13 @@ export default function Map() {
                         })}
                     </MapContainer>
                 ) : (
-                    <div className="h-full w-full flex items-center justify-center bg-gray-100">
+                    <div className="h-full w-full flex items-center justify-center bg-transparent">
                         <div className="text-center p-8">
-                            <div className="animate-pulse mb-4 mx-auto bg-blue-200 w-16 h-16 rounded-full flex items-center justify-center">
-                                <MapPin size={32} className="text-blue-600" />
+                            <div className="animate-pulse mb-4 mx-auto bg-green-400 w-16 h-16 rounded-full flex items-center justify-center">
+                                <MapPin size={32} className="text-white" />
                             </div>
-                            <h3 className="text-lg font-medium text-gray-800 mb-2">Accessing Your Location</h3>
-                            <p className="text-gray-600 max-w-md">
+                            <h3 className="text-lg font-medium text-green-400 mb-2">Accessing Your Location</h3>
+                            <p className="text-green-300 max-w-md">
                                 Please allow location access to find healthcare facilities near you.
                                 {error && <span className="block mt-2 text-red-600 text-sm">{error}</span>}
                             </p>
