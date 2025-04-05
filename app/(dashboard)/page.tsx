@@ -157,6 +157,10 @@ export default function Home() {
                                         <li>Progress tracking with symptom logging post-treatment.</li>
                                         <li>AI-driven recovery predictions and insights.</li>
                                         <li>Easy report generation for doctor consultations.</li>
+                                        <li>Drag-and-drop functionality to upload and manage medical reports, prescriptions, and test results.</li>
+                                        <li>Organized document storage with secure access and preview options.</li>
+                                        <li>Automatic parsing of uploaded medical documents for faster data extraction and history tracking.</li>
+                                        <li>Smart file categorization: prescriptions, lab reports, imaging results, and discharge summaries.</li>
                                     </ul>
                                 </div>
 
