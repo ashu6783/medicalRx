@@ -83,7 +83,6 @@ export default function Prescription() {
                             <span className="font-medium">Dosage:</span> {prescription.dosage}
                         </p>
 
-                        {/* Side Effects */}
                         <div>
                             <h3 className="font-medium text-gray-800">Side Effects</h3>
                             {prescription.sideEffects?.length ? (
@@ -97,7 +96,6 @@ export default function Prescription() {
                             )}
                         </div>
 
-                        {/* Alternatives */}
                         <div>
                             <h3 className="font-medium text-gray-800">Alternatives</h3>
                             {prescription.alternatives?.length ? (
@@ -111,7 +109,7 @@ export default function Prescription() {
                             )}
                         </div>
 
-                        {/* Contraindications */}
+
                         <div>
                             <h3 className="font-medium text-gray-800">Contraindications</h3>
                             {prescription.contraindications?.length ? (

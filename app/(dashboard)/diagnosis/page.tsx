@@ -53,9 +53,9 @@ export default function DiagnosisPage() {
     };
 
     return (
-        <div className="max-w-lg mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
-            <h1 className="text-xl font-bold mb-4">AI-Powered Symptom Diagnosis 🤒🔍</h1>
-            <p className="text-sm text-gray-600 mb-4">
+        <div className="max-w-3xl mx-auto mt-10 p-6 bg-transparent shadow-md rounded-md">
+            <h1 className="text-xl text-green-400 font-bold mb-4">AI-Powered Symptom Diagnosis🩺</h1>
+            <p className="text-sm text-white mb-4">
                 Enter symptoms to receive AI-based medical insights with confidence scores.
             </p>
             <div className="flex gap-2 mb-4">
@@ -65,7 +65,7 @@ export default function DiagnosisPage() {
                     onChange={(e) => setInput(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder="Enter a symptom..."
-                    className="border p-2 w-full rounded-md"
+                    className="border text-white p-2 w-full rounded-md"
                     aria-label="Symptom input"
                 />
                 <button
@@ -101,15 +101,15 @@ export default function DiagnosisPage() {
                 onClick={handleDiagnose}
                 disabled={loading || symptoms.length === 0}
                 className={`w-full px-4 py-2 rounded-md text-white ${symptoms.length === 0 || loading
-                        ? "bg-gray-400 cursor-not-allowed"
-                        : "bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-green-600 hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-green-300"
                     }`}
             >
                 {loading ? "Analyzing..." : "Diagnose"}
             </button>
 
             {diagnosisResults.length > 0 && (
-                <div className="mt-6 p-4 bg-gray-50 rounded-md">
+                <div className="mt-6 p-4 bg-transparent text-white rounded-md">
                     <h2 className="font-semibold text-lg mb-2">Diagnosis Results:</h2>
                     <ul className="space-y-3">
                         {diagnosisResults.map((issue, index) => (
@@ -133,7 +133,7 @@ export default function DiagnosisPage() {
                 </div>
             )}
 
-            <div className="mt-6 text-xs text-gray-500">
+            <div className="mt-6 text-xs text-white">
                 <p>Note: This tool provides informational insights only and should not replace professional medical advice.</p>
             </div>
         </div>
