@@ -26,7 +26,7 @@ export default function Page() {
         typeSpeed: 50,
         backSpeed: 30,
         loop: true,
-        cursorChar: '⚕️',
+        showCursor: false,
       });
 
       return () => typed1.destroy();

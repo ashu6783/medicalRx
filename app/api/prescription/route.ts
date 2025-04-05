@@ -14,13 +14,26 @@ export async function POST(req: Request) {
 
         console.log(`Processing prescription request for diagnosis: ${diagnosis}`);
 
-        const prompt = `Provide a structured prescription for the diagnosis: ${diagnosis}. 
-        Format your response as follows:
-        Name: [medication name]
-        Dosage: [specific dosage information]
-        Side Effects: [comma-separated list]
-        Alternatives: [comma-separated list]
-        Contraindications: [comma-separated list]`;
+        const prompt = `You are a medical assistant. Given a diagnosis, suggest a safe and basic prescription.
+
+        Diagnosis: ${diagnosis}
+        
+        Respond in the following format, keeping each section clear and on separate lines. Limit each list to a maximum of 5 items.
+        
+        Name: [Medication Name]
+        Dosage: [Dosage Instructions]
+        Side Effects:
+        - [Side effect 1]
+        - [Side effect 2]
+        - ...
+        Alternatives:
+        - [Alternative 1]
+        - ...
+        Contraindications:
+        - [Contraindication 1]
+        - ...
+        `;
+        
 
         // Call Gemini API (Using Gemini 1.5 Pro)
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
