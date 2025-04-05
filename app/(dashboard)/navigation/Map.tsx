@@ -1,4 +1,4 @@
-import { User, Bed, FileText, Globe, Clock, Trash2, Phone, AlertTriangle, Accessibility, MapPin } from 'lucide-react';
+import { User, Bed, FileText, Globe, Clock, AlertCircle, Phone, AlertTriangle, Accessibility, MapPin, Search } from 'lucide-react';
 import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
@@ -45,6 +45,9 @@ export default function Map() {
     const [places, setPlaces] = useState<Location[]>([]);
     const [searchType, setSearchType] = useState("hospital");
     const [specialityFilter, setSpecialityFilter] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [searchRadius, setSearchRadius] = useState(5000);
 
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(
@@ -54,20 +57,30 @@ export default function Map() {
                     lon: position.coords.longitude,
                 });
             },
-            (error) => console.error("Error getting location:", error),
+            (error) => {
+                console.error("Error getting location:", error);
+                setError("Unable to access your location. Please check your browser permissions.");
+            },
             { enableHighAccuracy: true }
         );
     }, []);
 
     const fetchPlaces = async (type: string) => {
-        if (!userLocation) return;
+        if (!userLocation) {
+            setError("Your location is required to search for nearby facilities.");
+            return;
+        }
+
+        setLoading(true);
+        setError(null);
+        setPlaces([]);
 
         const overpassQuery = `
             [out:json];
             (
-                node["amenity"="${type}"](around:5000, ${userLocation.lat}, ${userLocation.lon});
-                way["amenity"="${type}"](around:5000, ${userLocation.lat}, ${userLocation.lon});
-                relation["amenity"="${type}"](around:5000, ${userLocation.lat}, ${userLocation.lon});
+                node["amenity"="${type}"](around:${searchRadius}, ${userLocation.lat}, ${userLocation.lon});
+                way["amenity"="${type}"](around:${searchRadius}, ${userLocation.lat}, ${userLocation.lon});
+                relation["amenity"="${type}"](around:${searchRadius}, ${userLocation.lat}, ${userLocation.lon});
             );
             out center;
         `;
@@ -76,6 +89,11 @@ export default function Map() {
 
         try {
             const response = await fetch(overpassUrl);
+
+            if (!response.ok) {
+                throw new Error(`Server responded with status: ${response.status}`);
+            }
+
             const data = await response.json();
 
             interface OverpassElement {
@@ -104,7 +122,53 @@ export default function Map() {
                 };
             }
 
-            const results = data.elements.map((element: OverpassElement) => {
+            interface OverpassTags {
+                name?: string;
+                opening_hours?: string;
+                "opening_hours:covid19"?: string;
+                "addr:street"?: string;
+                "addr:housenumber"?: string;
+                "addr:city"?: string;
+                "addr:postcode"?: string;
+                phone?: string;
+                "contact:phone"?: string;
+                website?: string;
+                "contact:website"?: string;
+                wheelchair?: string;
+                emergency?: string;
+                operator?: string;
+                beds?: string;
+                insurance?: string;
+                languages?: string;
+                speciality?: string;
+            }
+
+            interface OverpassElement {
+                lat?: number;
+                lon?: number;
+                center?: { lat: number; lon: number };
+                tags?: OverpassTags;
+            }
+
+            interface LocationResult {
+                lat: number;
+                lon: number;
+                name: string;
+                openingHours: string | null;
+                covidHours: string | null;
+                address: string | null;
+                phone: string | null;
+                website: string | null;
+                wheelchair: string | null;
+                emergency: string | null;
+                speciality: string | null;
+                operator: string | null;
+                beds: string | null;
+                insurance: string | null;
+                languages: string | null;
+            }
+
+            const results: LocationResult[] = data.elements.map((element: OverpassElement) => {
                 const lat = element.lat || element.center?.lat;
                 const lon = element.lon || element.center?.lon;
                 const tags = element.tags || {};
@@ -145,190 +209,312 @@ export default function Map() {
                     insurance,
                     languages,
                 };
-            });
+            }).filter((item: LocationResult) => item.lat && item.lon);
 
             setPlaces(results);
+
+            if (results.length === 0) {
+                setError(`No ${type}s found within ${searchRadius / 1000}km of your location. Try increasing the search radius.`);
+            }
         } catch (error) {
             console.error("Error fetching places:", error);
+            setError(`Error fetching data: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        } finally {
+            setLoading(false);
         }
     };
 
+    // Filter displayed places by speciality if filter is active
+    const filteredPlaces = specialityFilter
+        ? places.filter(place =>
+            place.speciality &&
+            place.speciality.toLowerCase().includes(specialityFilter.toLowerCase()))
+        : places;
+
     return (
-        <div className="w-full flex flex-col lg:flex-row gap-4">
-            <div className="lg:w-1/3 w-full bg-white shadow-md p-4 rounded">
-                <h2 className="text-lg font-bold mb-3">Find Nearby {searchType}s</h2>
+        <div className="w-full flex flex-col lg:flex-row gap-6">
+            <div className="lg:w-1/3 w-full bg-white shadow-lg p-6 rounded-xl">
+                <h2 className="text-xl font-bold mb-4 text-blue-700">Find Nearby Healthcare</h2>
 
-                <select
-                    value={searchType}
-                    onChange={(e) => setSearchType(e.target.value)}
-                    className="w-full p-2 border rounded"
-                >
-                    <option value="hospital">Hospitals</option>
-                    <option value="pharmacy">Pharmacies</option>
-                    <option value="clinic">Clinics</option>
-                </select>
+                <div className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Facility Type</label>
+                        <select
+                            value={searchType}
+                            onChange={(e) => setSearchType(e.target.value)}
+                            className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        >
+                            <option value="hospital">Hospitals</option>
+                            <option value="pharmacy">Pharmacies</option>
+                            <option value="clinic">Clinics</option>
+                            <option value="doctors">Doctor&apos;s Offices</option>
+                        </select>
+                    </div>
 
-                <label className="block mt-4 font-semibold">Filter by Speciality</label>
-                <input
-                    type="text"
-                    placeholder="e.g. cardiology"
-                    value={specialityFilter}
-                    onChange={(e) => setSpecialityFilter(e.target.value.toLowerCase())}
-                    className="w-full p-2 border rounded"
-                />
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Search Radius (km)</label>
+                        <select
+                            value={searchRadius}
+                            onChange={(e) => setSearchRadius(Number(e.target.value))}
+                            className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        >
+                            <option value="1000">1 km</option>
+                            <option value="2500">2.5 km</option>
+                            <option value="5000">5 km</option>
+                            <option value="10000">10 km</option>
+                            <option value="25000">25 km</option>
+                        </select>
+                    </div>
 
-                <button
-                    onClick={() => fetchPlaces(searchType)}
-                    className="w-full mt-3 px-4 py-2 bg-blue-500 text-white rounded"
-                >
-                    Search
-                </button>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Filter by Speciality</label>
+                        <div className="relative">
+                            <input
+                                type="text"
+                                placeholder="e.g. cardiology, pediatrics"
+                                value={specialityFilter}
+                                onChange={(e) => setSpecialityFilter(e.target.value)}
+                                className="w-full p-2.5 border border-gray-300 rounded-lg pl-10 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            />
+                            <Search className="absolute left-3 top-3 text-gray-400" size={18} />
+                        </div>
+                    </div>
 
-                {places.length > 0 && (
-                    <div className="mt-4">
-                        <h2 className="text-lg font-bold">Top 10 {searchType}s Nearby</h2>
-                        <ul className="list-disc pl-5 mt-2">
-                            {places.slice(0, 10).map((place, index) => (
-                                <li key={index} className="mb-1">
-                                    {place.name} - ({place.lat.toFixed(4)}, {place.lon.toFixed(4)})
-                                </li>
+                    <button
+                        onClick={() => fetchPlaces(searchType)}
+                        disabled={loading || !userLocation}
+                        className={`w-full mt-2 px-4 py-3 text-white rounded-lg font-medium transition-colors flex items-center justify-center ${loading || !userLocation ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+                            }`}
+                    >
+                        {loading ? (
+                            <>
+                                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Searching...
+                            </>
+                        ) : (
+                            `Search Nearby ${searchType}s`
+                        )}
+                    </button>
+                </div>
+
+                {error && (
+                    <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm flex items-start">
+                        <AlertCircle className="mr-2 flex-shrink-0 mt-0.5" size={16} />
+                        <span>{error}</span>
+                    </div>
+                )}
+
+                {!loading && filteredPlaces.length > 0 && (
+                    <div className="mt-6">
+                        <h3 className="text-lg font-semibold mb-3 flex items-center">
+                            <span className="mr-2">{filteredPlaces.length} {searchType}{filteredPlaces.length !== 1 ? 's' : ''} Found</span>
+                            {specialityFilter && <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Filtered</span>}
+                        </h3>
+
+                        <div className="divide-y divide-gray-200 max-h-96 overflow-y-auto pr-1">
+                            {filteredPlaces.slice(0, 10).map((place, index) => (
+                                <div key={index} className="py-3 first:pt-0">
+                                    <h4 className="font-medium text-gray-900">{place.name}</h4>
+
+                                    <div className="mt-2 space-y-1.5 text-sm text-gray-600">
+                                        {place.address && (
+                                            <div className="flex items-start">
+                                                <MapPin className="mr-2 flex-shrink-0 mt-0.5" size={16} color="#6B7280" />
+                                                <span>{place.address}</span>
+                                            </div>
+                                        )}
+
+                                        {place.phone && (
+                                            <div className="flex items-center">
+                                                <Phone className="mr-2 flex-shrink-0" size={16} color="#10B981" />
+                                                <a href={`tel:${place.phone}`} className="text-green-600 hover:underline">{place.phone}</a>
+                                            </div>
+                                        )}
+
+                                        {place.website && (
+                                            <div className="flex items-center">
+                                                <Globe className="mr-2 flex-shrink-0" size={16} color="#3B82F6" />
+                                                <a href={place.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                                                    Website
+                                                </a>
+                                            </div>
+                                        )}
+
+                                        {place.speciality && (
+                                            <div className="flex items-start">
+                                                <User className="mr-2 flex-shrink-0 mt-0.5" size={16} color="#10B981" />
+                                                <span className="text-green-700">Speciality: {place.speciality}</span>
+                                            </div>
+                                        )}
+
+                                        {place.emergency === "yes" && (
+                                            <div className="flex items-center">
+                                                <AlertTriangle className="mr-2 flex-shrink-0" size={16} color="#EF4444" />
+                                                <span className="text-red-600 font-medium">Emergency Services Available</span>
+                                            </div>
+                                        )}
+
+                                        {place.wheelchair && (
+                                            <div className="flex items-center">
+                                                <Accessibility className="mr-2 flex-shrink-0" size={16} color="#6366F1" />
+                                                <span>Wheelchair Access: {place.wheelchair}</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
                             ))}
-                        </ul>
+                        </div>
                     </div>
                 )}
             </div>
 
-            <div className="lg:w-2/3 w-full h-[500px] rounded overflow-hidden">
-                {userLocation && (
-                    <MapContainer center={[userLocation.lat, userLocation.lon]} zoom={13} className="h-full w-full">
-                        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <div className="lg:w-2/3 w-full h-[600px] rounded-xl overflow-hidden shadow-lg border border-gray-200">
+                {userLocation ? (
+                    <MapContainer
+                        center={[userLocation.lat, userLocation.lon]}
+                        zoom={13}
+                        className="h-full w-full"
+                        zoomControl={false}
+                    >
+                        <TileLayer
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        />
 
                         <Marker position={[userLocation.lat, userLocation.lon]} icon={customIcon}>
-                            <Popup>You are here!</Popup>
+                            <Popup>
+                                <div className="text-center font-medium">Your Location</div>
+                            </Popup>
                         </Marker>
 
                         {places.map((place, index) => {
                             const isHighlighted =
                                 (place.speciality &&
                                     specialityFilter &&
-                                    place.speciality.toLowerCase().includes(specialityFilter)) ||
+                                    place.speciality.toLowerCase().includes(specialityFilter.toLowerCase())) ||
                                 (place.emergency && place.emergency.toLowerCase() === "yes");
 
                             const markerIcon = isHighlighted ? redIcon : customIcon;
 
                             return (
                                 <Marker key={index} position={[place.lat, place.lon]} icon={markerIcon}>
-                                    <Popup>
-                                        <div>
-                                            <strong>{place.name}</strong>
-                                            <br />
-                                            {place.speciality && (
-                                                <>
-                                                    <br />
-                                                    <span className='flex items-center'>
-                                                        <User className='mr-2' size={16} color="green" /> Speciality: {place.speciality}
-                                                    </span>
-                                                </>
-                                            )}
-                                            {place.operator && (
-                                                <>
-                                                    <br />
-                                                    <span className='flex items-center'>
-                                                        <User className='mr-2' size={16} color="blue" /> Operator: {place.operator}
-                                                    </span>
-                                                </>
-                                            )}
-                                            {place.beds && (
-                                                <>
-                                                    <br />
-                                                    <span className='flex items-center'>
-                                                        <Bed className='mr-2' size={16} color="orange" /> Beds: {place.beds}
-                                                    </span>
-                                                </>
-                                            )}
-                                            {place.insurance && (
-                                                <>
-                                                    <br />
-                                                    <span className='flex items-center'>
-                                                        <FileText className='mr-2' size={16} color="purple" /> Insurance: {place.insurance}
-                                                    </span>
-                                                </>
-                                            )}
-                                            {place.languages && (
-                                                <>
-                                                    <br />
-                                                    <span className='flex items-center'>
-                                                        <Globe className='mr-2' size={16} color="blue" /> Languages: {place.languages}
-                                                    </span>
-                                                </>
-                                            )}
-                                            {place.openingHours && (
-                                                <>
-                                                    <br />
-                                                    <span className='flex items-center'>
-                                                        <Clock className='mr-2' size={16} color="gray" /> Hours: {place.openingHours}
-                                                    </span>
-                                                </>
-                                            )}
-                                            {place.covidHours && (
-                                                <>
-                                                    <br />
-                                                    <span className='flex items-center'>
-                                                        <Trash2 className='mr-2' size={16} color="red" /> COVID Hours: {place.covidHours}
-                                                    </span>
-                                                </>
-                                            )}
-                                            {place.address && (
-                                                <>
-                                                    <br />
-                                                    <span className='flex items-center'>
-                                                        <MapPin className='mr-2' size={16} color="black" /> {place.address}
-                                                    </span>
-                                                </>
-                                            )}
-                                            {place.phone && (
-                                                <>
-                                                    <br />
-                                                    <span className='flex items-center'>
-                                                        <Phone className='mr-2' size={16} color="green" /> {place.phone}
-                                                    </span>
-                                                </>
-                                            )}
-                                            {place.website && (
-                                                <>
-                                                    <br />
-                                                    <span className='flex items-center'>
-                                                        <Globe className='mr-2' size={16} color="blue" />{' '}
-                                                        <a href={place.website} target="_blank" className="text-blue-500">
+                                    <Popup className="facility-popup">
+                                        <div className="popup-content">
+                                            <h3 className="text-lg font-bold text-black mb-2">{place.name}</h3>
+
+                                            <div className="space-y-2 text-sm">
+                                                {place.speciality && (
+                                                    <div className="flex items-start">
+                                                        <User className="mr-2 flex-shrink-0 mt-0.5" size={16} color="#10B981" />
+                                                        <span>Speciality: {place.speciality}</span>
+                                                    </div>
+                                                )}
+
+                                                {place.operator && (
+                                                    <div className="flex items-start">
+                                                        <User className="mr-2 flex-shrink-0 mt-0.5" size={16} color="#3B82F6" />
+                                                        <span>Operator: {place.operator}</span>
+                                                    </div>
+                                                )}
+
+                                                {place.beds && (
+                                                    <div className="flex items-start">
+                                                        <Bed className="mr-2 flex-shrink-0 mt-0.5" size={16} color="#F59E0B" />
+                                                        <span>Beds: {place.beds}</span>
+                                                    </div>
+                                                )}
+
+                                                {place.insurance && (
+                                                    <div className="flex items-start">
+                                                        <FileText className="mr-2 flex-shrink-0 mt-0.5" size={16} color="#8B5CF6" />
+                                                        <span>Insurance: {place.insurance}</span>
+                                                    </div>
+                                                )}
+
+                                                {place.languages && (
+                                                    <div className="flex items-start">
+                                                        <Globe className="mr-2 flex-shrink-0 mt-0.5" size={16} color="#3B82F6" />
+                                                        <span>Languages: {place.languages}</span>
+                                                    </div>
+                                                )}
+
+                                                {place.openingHours && (
+                                                    <div className="flex items-start">
+                                                        <Clock className="mr-2 flex-shrink-0 mt-0.5" size={16} color="#6B7280" />
+                                                        <span>Hours: {place.openingHours}</span>
+                                                    </div>
+                                                )}
+
+                                                {place.address && (
+                                                    <div className="flex items-start">
+                                                        <MapPin className="mr-2 flex-shrink-0 mt-0.5" size={16} color="#6B7280" />
+                                                        <span>{place.address}</span>
+                                                    </div>
+                                                )}
+
+                                                {place.phone && (
+                                                    <div className="flex items-start">
+                                                        <Phone className="mr-2 flex-shrink-0 mt-0.5" size={16} color="#10B981" />
+                                                        <a href={`tel:${place.phone}`} className="text-green-600 hover:underline">{place.phone}</a>
+                                                    </div>
+                                                )}
+
+                                                {place.website && (
+                                                    <div className="flex items-start">
+                                                        <Globe className="mr-2 flex-shrink-0 mt-0.5" size={16} color="#3B82F6" />
+                                                        <a
+                                                            href={place.website}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-blue-600 hover:underline"
+                                                        >
                                                             Visit Website
                                                         </a>
-                                                    </span>
-                                                </>
-                                            )}
-                                            {place.wheelchair && (
-                                                <>
-                                                    <br />
-                                                    <span className='flex items-center'>
-                                                        <Accessibility className='mr-2' size={16} color="yellow" /> Wheelchair:{" "}
-                                                        {place.wheelchair}
-                                                    </span>
-                                                </>
-                                            )}
-                                            {place.emergency && (
-                                                <>
-                                                    <br />
-                                                    <span className='flex items-center'>
-                                                        <AlertTriangle className='mr-2' size={16} color="red" />
-                                                        <span>Emergency: {place.emergency}</span>
-                                                    </span>
-                                                </>
-                                            )}
+                                                    </div>
+                                                )}
+
+                                                {place.wheelchair && (
+                                                    <div className="flex items-start">
+                                                        <Accessibility className="mr-2 flex-shrink-0 mt-0.5" size={16} color="#6366F1" />
+                                                        <span>Wheelchair: {place.wheelchair}</span>
+                                                    </div>
+                                                )}
+
+                                                {place.emergency && (
+                                                    <div className="flex items-start">
+                                                        <AlertTriangle
+                                                            className="mr-2 flex-shrink-0 mt-0.5"
+                                                            size={16}
+                                                            color={place.emergency.toLowerCase() === "yes" ? "#EF4444" : "#6B7280"}
+                                                        />
+                                                        <span className={place.emergency.toLowerCase() === "yes" ? "text-red-600 font-medium" : ""}>
+                                                            Emergency: {place.emergency}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
                                     </Popup>
                                 </Marker>
                             );
                         })}
                     </MapContainer>
+                ) : (
+                    <div className="h-full w-full flex items-center justify-center bg-gray-100">
+                        <div className="text-center p-8">
+                            <div className="animate-pulse mb-4 mx-auto bg-blue-200 w-16 h-16 rounded-full flex items-center justify-center">
+                                <MapPin size={32} className="text-blue-600" />
+                            </div>
+                            <h3 className="text-lg font-medium text-gray-800 mb-2">Accessing Your Location</h3>
+                            <p className="text-gray-600 max-w-md">
+                                Please allow location access to find healthcare facilities near you.
+                                {error && <span className="block mt-2 text-red-600 text-sm">{error}</span>}
+                            </p>
+                        </div>
+                    </div>
                 )}
             </div>
         </div>
