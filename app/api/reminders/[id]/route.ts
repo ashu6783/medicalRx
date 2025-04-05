@@ -1,64 +1,48 @@
-import { NextRequest, NextResponse } from "next/server";
-import mongoose from "mongoose";
-import Reminder from "@/components/modals/Reminder"; // ✅ default import
+import { NextResponse } from "next/server";
+import { connectDB } from "@/lib/api/db";
+import { Reminder } from "@/components/modals/Reminder";
 
+// For PUT request
+export async function PUT(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  await connectDB();
+  const body = await req.json();
 
-export async function PUT(req: NextRequest) {
-  try {
-    const { text, time } = await req.json();
+  // Await the params object
+  const { id } = await context.params;
 
-    const url = new URL(req.url);
-    const id = url.pathname.split("/").pop(); // Extract `id` manually
-
-    if (!id) {
-      return NextResponse.json({ error: "ID is required" }, { status: 400 });
-    }
-
-    await connectDB();
-
-    const updated = await Reminder.findByIdAndUpdate(
-      id,
-      { text, time },
-      { new: true }
-    );
-
-    if (!updated) {
-      return NextResponse.json({ error: "Reminder not found" }, { status: 404 });
-    }
-
-    return NextResponse.json(updated);
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  if (!id) {
+    return new NextResponse("Missing reminder ID", { status: 400 });
   }
+
+  const updated = await Reminder.findByIdAndUpdate(id, body, { new: true }).lean();
+  if (!updated) {
+    return new NextResponse("Reminder not found", { status: 404 });
+  }
+
+  return NextResponse.json(updated);
 }
 
-export async function DELETE(req: NextRequest) {
-  try {
-    const url = new URL(req.url);
-    const id = url.pathname.split("/").pop();
+// For DELETE request
+export async function DELETE(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  await connectDB();
 
-    if (!id) {
-      return NextResponse.json({ error: "ID is required" }, { status: 400 });
-    }
+  // Await the params object
+  const { id } = await context.params;
 
-    await connectDB();
-
-    const deleted = await Reminder.findByIdAndDelete(id);
-
-    if (!deleted) {
-      return NextResponse.json({ error: "Reminder not found" }, { status: 404 });
-    }
-
-    return NextResponse.json({ message: "Deleted successfully" });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  if (!id) {
+    return new NextResponse("Missing reminder ID", { status: 400 });
   }
-}
 
-async function connectDB() {
-  if (mongoose.connection.readyState === 0) {
-    await mongoose.connect(process.env.MONGODB_URI || "");
+  const deleted = await Reminder.findByIdAndDelete(id);
+  if (!deleted) {
+    return new NextResponse("Reminder not found", { status: 404 });
   }
+
+  return NextResponse.json({ message: "Deleted successfully" });
 }

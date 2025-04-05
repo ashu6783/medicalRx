@@ -1,15 +1,28 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-export interface IReminder extends Document {
+// Define a clean TypeScript type for client-side usage (no methods from Mongoose Document)
+export interface IReminder {
+  _id: string; // It's actually always a string when sent over JSON
   text: string;
-  time: string;
+  time?: string;
+  status: string;
 }
 
-const ReminderSchema: Schema = new Schema({
+// Define a Mongoose Document type separately for server-side
+interface IReminderDoc extends Document {
+  text: string;
+  time?: string;
+  status: string;
+}
+
+// Mongoose schema
+const ReminderSchema = new Schema<IReminderDoc>({
   text: { type: String, required: true },
-  time: { type: String, required: true },
+  time: { type: String },
+  status: { type: String, default: "Prescribed" },
 });
 
-const Reminder = mongoose.models.Reminder || mongoose.model<IReminder>("Reminder", ReminderSchema);
-
-export default Reminder;
+// Export Mongoose model
+export const Reminder =
+  mongoose.models.Reminder ||
+  mongoose.model<IReminderDoc>("Reminder", ReminderSchema);

@@ -77,31 +77,53 @@ export default function Prescription() {
                 {error && <p className="text-red-500">{error}</p>}
 
                 {prescription && (
-                    <div className="mt-6 p-5 bg-gray-50 rounded-xl border border-gray-200 space-y-5">
-                        <h2 className="text-2xl font-semibold text-blue-800">{prescription.name}</h2>
+                    <div className="mt-6 p-5 bg-gray-50 rounded-xl border space-y-4">
+                        <h2 className="text-xl font-semibold text-gray-800">{prescription.name}</h2>
                         <p className="text-gray-700">
                             <span className="font-medium">Dosage:</span> {prescription.dosage}
                         </p>
 
-                        {/* Reusable section component */}
-                        {[
-                            { title: 'Side Effects', items: prescription.sideEffects },
-                            { title: 'Alternatives', items: prescription.alternatives },
-                            { title: 'Contraindications', items: prescription.contraindications },
-                        ].map(({ title, items }) => (
-                            <div key={title}>
-                                <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
-                                {items?.length ? (
-                                    <ul className="list-disc list-inside text-gray-700 space-y-1">
-                                        {items.slice(0, 5).map((item, index) => (
-                                            <li key={index}>{item}</li>
-                                        ))}
-                                    </ul>
-                                ) : (
-                                    <p className="text-gray-500">Not available</p>
-                                )}
-                            </div>
-                        ))}
+                        {/* Side Effects */}
+                        <div>
+                            <h3 className="font-medium text-gray-800">Side Effects</h3>
+                            {prescription.sideEffects?.length ? (
+                                <ul className="list-disc list-inside text-gray-700 space-y-1">
+                                    {prescription.sideEffects.map((item, index) => (
+                                        <li key={index}>{item}</li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p className="text-gray-500">Not available</p>
+                            )}
+                        </div>
+
+                        {/* Alternatives */}
+                        <div>
+                            <h3 className="font-medium text-gray-800">Alternatives</h3>
+                            {prescription.alternatives?.length ? (
+                                <ul className="list-disc list-inside text-gray-700 space-y-1">
+                                    {prescription.alternatives.map((item, index) => (
+                                        <li key={index}>{item}</li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p className="text-gray-500">Not available</p>
+                            )}
+                        </div>
+
+                        {/* Contraindications */}
+                        <div>
+                            <h3 className="font-medium text-gray-800">Contraindications</h3>
+                            {prescription.contraindications?.length ? (
+                                <ul className="list-disc list-inside text-gray-700 space-y-1">
+                                    {prescription.contraindications.map((item, index) => (
+                                        <li key={index}>{item}</li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p className="text-gray-500">Not available</p>
+                            )}
+                        </div>
                     </div>
                 )}
             </div>
