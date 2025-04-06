@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: "MedicalRx",
   description: "Your AI-powered medical assistant",
   icons: {
-    icon: "🩺",
+    icon: "/logo.svg",
   }
 };
 
@@ -34,7 +34,6 @@ export default function RootLayout({
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}>
           {/* Inject Three.js into the body */}
           <AnimatedBackground />
-
           {/* Page Content */}
           {children}
         </body>
