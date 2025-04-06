@@ -221,7 +221,7 @@ export default function Consultation() {
         <div className="h-screen flex flex-col bg-transparent">
             <header className="bg-transparent text-white shadow-sm p-4">
                 <div className="max-w-4xl mx-auto flex items-center">
-                    <svg className="w-8 h-8 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg className="w-8 h-8 text-green-300 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
                     <h1 className="text-2xl font-semibold text-white">AI Medical Consultation</h1>
@@ -248,11 +248,11 @@ export default function Consultation() {
                 >
                     <div className="p-4">
                         {messages.length === 0 && (
-                            <div className="text-center text-green-400 bg-black border rounded-xl border-green-400 py-8">
-                                <svg className="w-12 h-8 mx-auto mb-3 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <div className="text-center text-green-300 bg-black border rounded-xl border-green-300 py-8">
+                                <svg className="w-12 h-8 mx-auto mb-3 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
                                 </svg>
-                                <p className="text-lg">Start your MedicalRx AI powered speech supported medical consultation by describing your symptoms or asking a health question.</p>
+                                <p className="text-md lg:text-lg">Start your MedicalRx AI powered speech supported medical consultation by describing your symptoms or asking a health question.</p>
                             </div>
                         )}
 
