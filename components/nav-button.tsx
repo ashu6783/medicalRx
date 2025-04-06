@@ -6,14 +6,14 @@ type Props = {
     href: string;
     label: React.ReactNode;
     isActive?: boolean;
-    icon?: React.ReactNode; // Add optional icon prop
+    icon?: React.ReactNode;
 }
 
 export const NavButton = ({
     href,
     label,
     isActive,
-    icon, // Support for icon
+    icon, 
 }: Props) => {
     return (
         <Button

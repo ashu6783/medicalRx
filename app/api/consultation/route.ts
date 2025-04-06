@@ -51,6 +51,9 @@ Provide medically relevant advice in a professional yet simple-to-understand ton
       throw new Error("No response from AI.");
     }
 
+    //Sice the response contains asterisks, we need to remove them to get the final response.
+    // This is a workaround to remove asterisks from the response text.
+
     const cleanedResponseText = removeAsterisks(responseText);
 
     return NextResponse.json({ response: cleanedResponseText });

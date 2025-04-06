@@ -7,13 +7,14 @@ export interface IReminder {
   status: string;
   priority?: 'high' | 'medium' | 'low';
   date?: string;
+  userId: string;
 }
 
-// Define a Mongoose Document type separately for server-side
 interface IReminderDoc extends Document {
   text: string;
   time?: string;
   status: string;
+  userId: string;
   
 }
 
@@ -21,6 +22,7 @@ const ReminderSchema = new Schema<IReminderDoc>({
   text: { type: String, required: true },
   time: { type: String },
   status: { type: String, default: "Prescribed" },
+  userId: { type: String, required: true }, // new field
 });
 
 export const Reminder =

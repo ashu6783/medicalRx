@@ -96,6 +96,7 @@ export default function ReminderBoard() {
             text: input,
             time,
             status: "Prescribed",
+            userId: user?.id,
         };
 
         try {

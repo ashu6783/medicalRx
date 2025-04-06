@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// Initialize Gemini API with API key
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export async function POST(req: Request) {
@@ -35,7 +34,6 @@ export async function POST(req: Request) {
         `;
         
 
-        // Call Gemini API (Using Gemini 1.5 Pro)
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
         const result = await model.generateContent(prompt);
         const outputText = result.response.text();
@@ -47,9 +45,7 @@ export async function POST(req: Request) {
             }, { status: 500 });
         }
 
-        // Parse the response into structured data
         const parsedData = parsePrescription(outputText);
-        // console.log("Parsed prescription data:", parsedData);
 
         return NextResponse.json(parsedData);
     } catch (error) {
@@ -60,7 +56,6 @@ export async function POST(req: Request) {
     }
 }
 
-// Function to parse response text into structured prescription data
 function parsePrescription(text: string) {
     const prescription = {
         name: extractValue(text, "Name:") || "Unknown medication",
@@ -79,7 +74,6 @@ function extractValue(text: string, key: string): string {
     return match ? match[1].trim() : "";
 }
 
-// Helper function to extract arrays from the text
 function extractArray(text: string, key: string): string[] {
     const value = extractValue(text, key);
     if (!value) return [];

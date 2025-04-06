@@ -1,4 +1,4 @@
-// /app/api/gemini-search/route.ts
+// Not implemented yet it will be used to search for medicines using Gemini API (further features will be added later)
 import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 

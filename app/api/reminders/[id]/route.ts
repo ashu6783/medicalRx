@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/api/db";
 import { Reminder } from "@/components/modals/Reminder";
 
-// For PUT request
+
 export async function PUT(
   req: Request,
   context: { params: Promise<{ id: string }> }
@@ -10,7 +10,6 @@ export async function PUT(
   await connectDB();
   const body = await req.json();
 
-  // Await the params object
   const { id } = await context.params;
 
   if (!id) {
@@ -25,14 +24,12 @@ export async function PUT(
   return NextResponse.json(updated);
 }
 
-// For DELETE request
 export async function DELETE(
   req: Request,
   context: { params: Promise<{ id: string }> }
 ) {
   await connectDB();
 
-  // Await the params object
   const { id } = await context.params;
 
   if (!id) {

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// Initialize Gemini API with API key
+
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export async function POST(req: Request) {
@@ -27,18 +27,14 @@ export async function POST(req: Request) {
           ]
         }`;
 
-        // Call Gemini API (Using Gemini Pro)
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
         const result = await model.generateContent(prompt);
         const responseText = result.response.text();
 
-        // Remove Markdown formatting if present
         const cleanedResponse = responseText.replace(/```json|```/g, "").trim();
 
-        // Parse AI response
         const aiResponse = JSON.parse(cleanedResponse || "{}");
         
-        // Process the response to match the DiagnosisIssue[] format expected by the frontend
         const diagnosis = [
             ...(aiResponse.common_issues || []).map((issue: { name: string; recommendation: string }) => ({
                 ...issue,
