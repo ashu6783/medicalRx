@@ -69,7 +69,8 @@ export default function Prescription() {
                 <button
                     onClick={fetchPrescription}
                     disabled={loading}
-                    className="w-full py-2 bg-green-400 text-black font-bold rounded-lg hover:bg-green-300 transition disabled:bg-green-300"
+                    className="w-full py-2 bg-green-400 text-black font-bold rounded-lg hover:bg-green-500 transition disabled:bg-green-600
+                    "
                 >
                     {loading ? 'Fetching...' : 'Get Prescription'}
                 </button>
