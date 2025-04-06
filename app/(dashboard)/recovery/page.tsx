@@ -7,6 +7,7 @@ import { TouchBackend } from "react-dnd-touch-backend";
 import DroppableColumn from "@/components/DroppableColumns";
 import type { IReminder } from "@/components/modals/Reminder";
 import { PlusCircle, Clock } from "lucide-react";
+import { useUser } from "@clerk/nextjs"
 
 const STAGES: (keyof typeof STATUS_COLORS)[] = [
     "Prescribed",
@@ -31,7 +32,7 @@ const isMobileDevice =
 
 const backendForDnd = isMobileDevice
     ? (manager: import("dnd-core").DragDropManager) =>
-          TouchBackend(manager, { enableMouseEvents: true })
+        TouchBackend(manager, { enableMouseEvents: true })
     : HTML5Backend;
 
 export default function ReminderBoard() {
@@ -40,6 +41,8 @@ export default function ReminderBoard() {
     const [time, setTime] = useState("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+
+    const { user } = useUser();
 
     useEffect(() => {
         fetch("/api/reminders")
@@ -147,6 +150,10 @@ export default function ReminderBoard() {
             <div className="p-6 max-w-7xl mx-auto">
                 <h1 className="text-2xl font-bold mb-6 text-white">Patient Treatment Tracker</h1>
 
+                <p className="text-white font-bold pb-2 text-base sm:text-lg md:text-xl">
+                    Welcome Back <span className="font-bold text-green-400">{user?.firstName ? `, ${user.firstName}` : ''} 👋</span>
+                </p>
+
                 {error && (
                     <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 relative">
                         <span className="block sm:inline">{error}</span>
@@ -191,6 +198,16 @@ export default function ReminderBoard() {
                     </div>
                 </div>
 
+                <div className="flex flex-col">
+                    <p className="text-white font-bold pb-3 text-base sm:text-lg md:text-xl">
+                        Please drag and drop through the stages to update the reminders on kanban board!
+                    </p>
+                    <span className="text-green-400 font-bold pb-3 text-sm sm:text-base md:text-lg">
+                        Hoping for your speedy recovery ❤️
+                    </span>
+                </div>
+
+
                 {loading ? (
                     <div className="flex justify-center my-12">
                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
@@ -209,7 +226,7 @@ export default function ReminderBoard() {
                                     stage={stage}
                                     reminders={reminders.filter((r) => r.status === stage)}
                                     onDrop={(id: string) => updateReminderStage(id, stage)}
-                                    columnColor={STATUS_COLORS[stage]}
+                                    // columnColor={STATUS_COLORS[stage]}
                                     onDelete={deleteReminder}
                                 />
                             </div>

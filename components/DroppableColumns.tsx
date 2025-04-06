@@ -7,14 +7,14 @@ interface DroppableColumnProps {
   stage: string;
   reminders: IReminder[];
   onDrop: (id: string) => void;
-  columnColor: string;
+  // columnColor: string;
   onDelete: (id: string) => void;
 }
 
 export default function DroppableColumn({
   reminders,
   onDrop,
-  columnColor,
+  // columnColor,
   onDelete,
 }: DroppableColumnProps) {
   const dropRef = useRef<HTMLDivElement>(null);
@@ -32,7 +32,7 @@ export default function DroppableColumn({
   return (
     <div
       ref={dropRef}
-      className={`rounded-md min-h-52 p-4 shadow-md transition-all ${columnColor} ${isOver ? "bg-green-100" : ""}`}
+      className={`rounded-md min-h-52 p-4 shadow-md transition-all ${isOver ? "bg-green-100" : ""}`}
       style={{ cursor: "default" }}
     >
       {reminders.map((reminder) => (
