@@ -24,17 +24,24 @@ const STATUS_COLORS = {
     "Recovered": "bg-green-100 border-green-300",
 };
 
+
+const isMobileDevice =
+    typeof window !== "undefined" &&
+    (window.innerWidth <= 768 || "ontouchstart" in window);
+
+const backendForDnd = isMobileDevice
+    ? (manager: import("dnd-core").DragDropManager) =>
+          TouchBackend(manager, { enableMouseEvents: true })
+    : HTML5Backend;
+
 export default function ReminderBoard() {
     const [reminders, setReminders] = useState<IReminder[]>([]);
     const [input, setInput] = useState("");
     const [time, setTime] = useState("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
-    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
-        setIsMobile(window.innerWidth <= 768 || "ontouchstart" in window);
-        setLoading(true);
         fetch("/api/reminders")
             .then((res) => {
                 if (!res.ok) throw new Error("Failed to fetch reminders");
@@ -134,10 +141,6 @@ export default function ReminderBoard() {
             setError("Failed to connect to server. Please check your connection.");
         }
     };
-
-    const backendForDnd = isMobile
-        ? (manager: import("dnd-core").DragDropManager) => TouchBackend(manager, { enableMouseEvents: true })
-        : HTML5Backend;
 
     return (
         <DndProvider backend={backendForDnd}>
