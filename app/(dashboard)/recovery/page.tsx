@@ -3,12 +3,11 @@
 import { useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { TouchBackend } from "react-dnd-touch-backend"; // Import the touch backend
+import { TouchBackend } from "react-dnd-touch-backend";
 import DroppableColumn from "@/components/DroppableColumns";
 import type { IReminder } from "@/components/modals/Reminder";
 import { PlusCircle, Clock } from "lucide-react";
 
-// Status colors and stages...
 const STAGES: (keyof typeof STATUS_COLORS)[] = [
     "Prescribed",
     "First Checkup",
@@ -31,10 +30,10 @@ export default function ReminderBoard() {
     const [time, setTime] = useState("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
-    const [isMobile, setIsMobile] = useState(false); // To track if it's mobile
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
-        setIsMobile(window.innerWidth <= 768 || 'ontouchstart' in window); // Check for mobile device
+        setIsMobile(window.innerWidth <= 768 || "ontouchstart" in window);
         setLoading(true);
         fetch("/api/reminders")
             .then((res) => {
@@ -57,8 +56,6 @@ export default function ReminderBoard() {
         if (!reminder || reminder.status === newStage) return;
 
         const updated = { ...reminder, status: newStage };
-
-        // Optimistic update
         setReminders((prev) => prev.map((r) => (r._id === id ? updated : r)));
 
         try {
@@ -69,13 +66,11 @@ export default function ReminderBoard() {
             });
 
             if (!res.ok) {
-                // Revert if failed
                 setReminders((prev) => prev.map((r) => (r._id === id ? reminder : r)));
                 setError("Failed to update reminder status. Please try again.");
             }
         } catch (error) {
             console.error("Error updating reminder:", error);
-            // Revert on error
             setReminders((prev) => prev.map((r) => (r._id === id ? reminder : r)));
             setError("Failed to connect to server. Please check your connection.");
         }
@@ -122,7 +117,6 @@ export default function ReminderBoard() {
         const deletedReminder = reminders.find((r) => r._id === id);
         if (!deletedReminder) return;
 
-        // Optimistic delete
         setReminders((prev) => prev.filter((r) => r._id !== id));
 
         try {
@@ -131,24 +125,25 @@ export default function ReminderBoard() {
             });
 
             if (!res.ok) {
-                // Revert if failed
                 setReminders((prev) => [...prev, deletedReminder]);
                 setError("Failed to delete reminder. Please try again.");
             }
         } catch (error) {
             console.error("Error deleting reminder:", error);
-            // Revert on error
             setReminders((prev) => [...prev, deletedReminder]);
             setError("Failed to connect to server. Please check your connection.");
         }
     };
 
+    const backendForDnd = isMobile
+        ? (manager: import("dnd-core").DragDropManager) => TouchBackend(manager, { enableMouseEvents: true })
+        : HTML5Backend;
+
     return (
-        <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}> {/* Use mobile backend */}
+        <DndProvider backend={backendForDnd}>
             <div className="p-6 max-w-7xl mx-auto">
                 <h1 className="text-2xl font-bold mb-6 text-white">Patient Treatment Tracker</h1>
 
-                {/* Error alert */}
                 {error && (
                     <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 relative">
                         <span className="block sm:inline">{error}</span>
@@ -161,7 +156,6 @@ export default function ReminderBoard() {
                     </div>
                 )}
 
-                {/* Input section with improved styling */}
                 <div className="bg-white shadow-md rounded-lg p-4 mb-8">
                     <h2 className="text-lg font-semibold mb-3 text-gray-700">Add New Reminder</h2>
                     <div className="flex flex-col md:flex-row gap-3">
@@ -194,22 +188,26 @@ export default function ReminderBoard() {
                     </div>
                 </div>
 
-                {/* Loading state */}
                 {loading ? (
                     <div className="flex justify-center my-12">
                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-                        {STAGES.map((stage: keyof typeof STATUS_COLORS) => (
-                            <div key={stage} className={`rounded-lg ${STATUS_COLORS[stage]} p-4 shadow-sm`}>
-                                <h3 className="font-semibold text-gray-800 mb-3 text-center">{stage}</h3>
+                        {STAGES.map((stage) => (
+                            <div
+                                key={stage}
+                                className={`rounded-lg ${STATUS_COLORS[stage]} p-4 shadow-sm`}
+                            >
+                                <h3 className="font-semibold text-gray-800 mb-3 text-center">
+                                    {stage}
+                                </h3>
                                 <DroppableColumn
                                     stage={stage}
                                     reminders={reminders.filter((r) => r.status === stage)}
                                     onDrop={(id: string) => updateReminderStage(id, stage)}
                                     columnColor={STATUS_COLORS[stage]}
-                                    onDelete={deleteReminder} // Make sure to pass this properly
+                                    onDelete={deleteReminder}
                                 />
                             </div>
                         ))}
