@@ -374,7 +374,7 @@ export default function Map() {
                 )}
             </div>
 
-            <div className="lg:w-2/3 w-full h-[600px] rounded-xl overflow-hidden shadow-lg border border-gray-200">
+            <div className="lg:w-2/3 z-10 w-full h-[600px] rounded-xl overflow-hidden shadow-lg border border-gray-200">
                 {userLocation ? (
                     <MapContainer
                         center={[userLocation.lat, userLocation.lon]}

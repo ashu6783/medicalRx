@@ -32,12 +32,12 @@ export const Navigation = () => {
                 <SheetTrigger>
                     <Button
                         variant="outline"
-                        size="sm"
+                        size="lg"
                         className="font-normal bg-white/10 hover:bg-white/20 hover:text-white 
                         focus-visible:ring-offset-0 focus-visible:ring-transparent outline-none
                         text-white focus:bg-white/30 transition border-none"
                     >
-                        <Menu className="size-4" />
+                        <Menu className="size-7" aria-label="Menu" />
                     </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="px-2">
