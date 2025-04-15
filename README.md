@@ -148,7 +148,7 @@ npm run dev
 
 ## 🔮 Roadmap
 
-We're continuously improving MedicalRx with these upcoming features:
+Here is MedicalRx with these upcoming features:
 
 - [ ] **Pharmacy API Integration** for medication availability checking
 - [ ] **Notification System** for medication reminders via email/SMS
