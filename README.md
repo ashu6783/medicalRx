@@ -1,116 +1,180 @@
+<div align="center">
+  
 # MedicalRx ⚕️
 
-**MedicalRx** is a **AI powered** full-stack medical consultation and prescription management platform designed to digitize, simplify, and personalize healthcare delivery. Built with a focus on both patients and doctors, the system offers AI-assisted diagnosis, AI based prescription, automated patient education,Speech supported Consultation AI chatbot, lab test recommendations, kanban based recovery tracking and much more.
+**AI-Powered Healthcare Platform for Modern Medical Practice**
 
-## Previews::
+[![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-## Landing-Page
+</div>
 
-![Screenshot 2025-04-06 134047](https://github.com/user-attachments/assets/f8c79175-302e-41f1-a362-ee5d969bd8b1)
+## 📋 Overview
 
-## Overview
+**MedicalRx** is a comprehensive full-stack medical platform leveraging AI to transform healthcare delivery. Built for both patients and healthcare providers, the system offers:
 
-![image](https://github.com/user-attachments/assets/4d0d1b34-a6f1-4827-9294-41f9c7d764eb)
+- 🤖 AI-assisted diagnosis and prescription generation
+- 💊 Digital prescription management 
+- 🗣️ Voice-enabled medical consultation chatbot
+- 🧠 Automated patient education resources
+- 🗺️ Interactive medical facility mapping
+- 📊 Kanban-based recovery tracking system
 
-## AI based diagnosis
+## 🖼️ Platform Highlights
 
-![image](https://github.com/user-attachments/assets/3f86edb8-d11c-4d68-b35e-1424e5259ff8)
+<table>
+  <tr>
+    <td width="50%">
+      <p align="center"><b>Landing Page</b></p>
+      <img src="https://github.com/user-attachments/assets/f8c79175-302e-41f1-a362-ee5d969bd8b1" alt="Landing Page">
+    </td>
+    <td width="50%">
+      <p align="center"><b>Dashboard Overview</b></p>
+      <img src="https://github.com/user-attachments/assets/4d0d1b34-a6f1-4827-9294-41f9c7d764eb" alt="Dashboard Overview">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <p align="center"><b>AI-Based Diagnosis</b></p>
+      <img src="https://github.com/user-attachments/assets/3f86edb8-d11c-4d68-b35e-1424e5259ff8" alt="AI Diagnosis">
+    </td>
+    <td width="50%">
+      <p align="center"><b>AI-Based Prescription</b></p>
+      <img src="https://github.com/user-attachments/assets/9040c874-e78b-4cb6-b901-e399192a6b8f" alt="AI Prescription">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <p align="center"><b>Healthcare Facility Navigation</b></p>
+      <img src="https://github.com/user-attachments/assets/7bffee0a-8f85-4ebf-abf1-e6754e595260" alt="Map Navigation 1">
+    </td>
+    <td width="50%">
+      <p align="center"><b>Facility Information View</b></p>
+      <img src="https://github.com/user-attachments/assets/fedbd65c-f4e3-48c6-98f3-7353009f50f8" alt="Map Navigation 2">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <p align="center"><b>AI Chatbot with Voice Assistant</b></p>
+      <img src="https://github.com/user-attachments/assets/85f8acb4-cac0-412a-826f-ff6a22ee4267" alt="AI Chatbot 1">
+    </td>
+    <td width="50%">
+      <p align="center"><b>Voice-Enabled Consultations</b></p>
+      <img src="https://github.com/user-attachments/assets/22f0c7de-d458-49fe-ba36-9e7e59523000" alt="AI Chatbot 2">
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <p align="center"><b>Patient Progress Kanban Board</b></p>
+      <img src="https://github.com/user-attachments/assets/1f8eb825-1046-4377-ac48-7299bc877e76" alt="Kanban Board">
+    </td>
+  </tr>
+</table>
 
-## Navigation Through Map
-![image](https://github.com/user-attachments/assets/7bffee0a-8f85-4ebf-abf1-e6754e595260)
+## 🌟 Key Features
 
-![image](https://github.com/user-attachments/assets/fedbd65c-f4e3-48c6-98f3-7353009f50f8)
+### 🩺 Clinical Management
+- **Secure Authentication** via Clerk
+- **AI-Powered Diagnosis** with symptom analysis and probability ratings
+- **Digital Prescription Generation** with smart medication recommendations
+- **Voice-Enabled AI Assistant** for hands-free operation
+- **Patient Education Content** automatically generated with each prescription
+- **Drag & Drop Kanban Board** for tracking patient progress through treatment stages
 
-## AI based Prescription:
+### 🤖 AI-Powered Capabilities
+- **Gemini API Integration** providing:
+  - Evidence-based disease recommendations
+  - Medication information including alternatives and side effects
+  - Appropriate lab test suggestions
+  - Interactive medical chatbot with clinical knowledge
 
-![image](https://github.com/user-attachments/assets/9040c874-e78b-4cb6-b901-e399192a6b8f)
+### 📌 Location Services
+- **Interactive Healthcare Map** showing nearby medical facilities
+- **Facility Information** including available services and specialties
+- **Integrated Navigation** within the consultation workflow
+- **Built with React-Leaflet** and Open Street Map API
 
-## AI chatbot with voice assistant
+## 🛠️ Technology Stack
 
-![image](https://github.com/user-attachments/assets/85f8acb4-cac0-412a-826f-ff6a22ee4267)
-![image](https://github.com/user-attachments/assets/22f0c7de-d458-49fe-ba36-9e7e59523000)
+### Frontend
+- **Next.js** (App Directory architecture)
+- **Tailwind CSS** for responsive styling
+- **React DnD** for drag-and-drop functionality
+- **Three.js** for 3D animations
 
+### Backend & Data
+- **Node.js** with Express where applicable
+- **MongoDB** with Mongoose for data management
+- **Clerk** for secure authentication
 
-## Kanban Board
+### API Integrations
+- **Gemini API** for AI-powered medical insights
+- **React-Leaflet** with Open Street Map API
+- **Web Speech API** for voice interactions
 
-![image](https://github.com/user-attachments/assets/1f8eb825-1046-4377-ac48-7299bc877e76)
-
-
-
-
-
-
-
-
-## 🌟 Features
-
-### 🩺MedicalRx Dashboard
-- Secure login using Clerk
-- Take symptom based AI medical diagnosis with probability rate.
-- Voice assistant to sread AI responses.
-- Generate digital prescriptions
-- AI chatbot with web speech facility.
-- Auto-generated educational content with every prescription.
-- Drag & Drop Kanban type board to track patient progress (Prescribed → First Checkup → Final Visit)
-
-
-### 🤖 AI-Powered Insights
-- Gemini API integration for:
-  - Disease-based recommendations
-  - Medication usage, alternatives, side effects
-  - Lab test suggestions and chatbot.
-
-### 📌 Map based navigation
-- Locate nearby clinics, hospitals, and medical facilities
-- View services provided by each facility (e.g., lab tests, emergency, pharmacy, etc.)
-- Used React-Leaflet and Open source Map .
-- Integrated into the consultation and diagnosis workflow for better decision-making
-
----
-
-## 🛠️ Tech Stack
-
-- **Frontend:** Next.js (App Directory), Tailwind CSS, Clerk Auth, React DnD
-- **Backend:** Node.js, Express (where applicable)
-- **Database:** MongoDB + Mongoose
-- **AI Integration:** Gemini API
-- **Navigation:** React-Leaflet, Open Street Map API
-- **API request limit**- Zustand
-- **3D animation**- Threejs Library
-
----
+### State Management
+- **Zustand** for managing API request limits and application state
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-
-- MongoDB URI
-- Clerk project credentials
+Before installing, ensure you have the following:
+- Node.js and npm installed
+- MongoDB account and database URI
+- Clerk authentication credentials
 - Gemini API key
-- Zustand key
-  
+- Zustand configuration
 
 ### Installation
 
-bash
+```bash
+# Clone the repository
 git clone https://github.com/ashu6783/medicalrx.git
+
+# Navigate to project directory
 cd medicalrx
+
+# Install dependencies
 npm install
 
+# Set up environment variables
+# Create a .env.local file with your API keys and credentials
 
+# Start the development server
+npm run dev
+```
 
-🤝 Contributing
-Feel free to fork the repo, open issues, or submit PRs. Contributions are always welcome!
+## 🔮 Roadmap
 
-## 📌 Upcoming Features
+We're continuously improving MedicalRx with these upcoming features:
 
-- Integration with nearby pharmacy APIs
-- Reminder notifications via email/SMS
-- Admin dashboard to monitor system-wide health stats
-- PDF upload for one place management.
+- [ ] **Pharmacy API Integration** for medication availability checking
+- [ ] **Notification System** for medication reminders via email/SMS
+- [ ] **Administrative Dashboard** for system-wide health statistics
+- [ ] **Document Management** with PDF upload capabilities
 
-## Do check out DEPLOYED link.
+## 🤝 Contributing
 
+Contributions make the open-source community thrive! We welcome:
+- Bug reports
+- Feature requests
+- Pull requests
+- Documentation improvements
 
+Please feel free to fork the repository and submit PRs.
 
+## 📝 License
 
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🔗 Deployment
+
+Check out the live version of MedicalRx [here](#) (replace with your deployed link).
+
+---
+
+<div align="center">
+  <p>Built with ❤️ by <a href="https://github.com/ashu6783">ashu6783</a></p>
+</div>
