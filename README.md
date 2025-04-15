@@ -125,7 +125,7 @@ Before installing, ensure you have the following:
 - MongoDB account and database URI
 - Clerk authentication credentials
 - Gemini API key
-- Zustand configuration
+- Upstash Redis configuration
 
 ### Installation
 
