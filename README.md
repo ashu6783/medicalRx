@@ -114,7 +114,7 @@
 - **React-Leaflet** with Open Street Map API
 - **Web Speech API** for voice interactions
 
-### State Management
+### API Rate Limit
 - **Upstash Redis** for managing API request limits and application state
 
 ## 🚀 Getting Started
