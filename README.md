@@ -115,7 +115,7 @@
 - **Web Speech API** for voice interactions
 
 ### State Management
-- **Zustand** for managing API request limits and application state
+- **Upstash Redis** for managing API request limits and application state
 
 ## 🚀 Getting Started
 
