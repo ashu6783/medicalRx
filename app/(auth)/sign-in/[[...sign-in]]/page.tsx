@@ -47,7 +47,7 @@ export default function Page() {
         typeSpeed: 50,
         backSpeed: 30,
         loop: true,
-        cursorChar: '⚕️',
+        cursorChar: '..',
       });
 
       return () => typed2.destroy();
