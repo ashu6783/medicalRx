@@ -339,11 +339,7 @@ export default function Home() {
                             <span className="text-xl font-bold">MedicalRx</span>
                         </div>
                         <div className="flex space-x-4 mb-6 md:mb-0">
-                            {["Facebook", "Twitter", "Instagram", "LinkedIn"].map((social, index) => (
-                                <a key={index} href="#" className="text-gray-400 hover:text-white transition-colors duration-300">
-                                    {social}
-                                </a>
-                            ))}
+                            <p className='text-gray-400 text-sm'>From Ashu with care ❤️</p>
                         </div>
                         <p className="text-gray-400 text-sm">© 2025 MedicalRx. All rights reserved.</p>
                     </div>
