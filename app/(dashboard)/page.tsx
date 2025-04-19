@@ -287,7 +287,7 @@ export default function Home() {
                         {benefits.map((benefit, index) => (
                             <motion.div
                                 key={index}
-                                className="bg-gradient-to-br from-blue-900 to-indigo-900 rounded-xl p-6 shadow-lg"
+                                className="bg-gradient-to-r from-[#06116f] to-purple-700 rounded-xl p-6 shadow-lg"
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
@@ -297,7 +297,7 @@ export default function Home() {
                                     boxShadow: "0px 10px 30px rgba(59, 130, 246, 0.3)"
                                 }}
                             >
-                                <div className="h-14 w-14 bg-blue-500 bg-opacity-20 rounded-full flex items-center justify-center mb-4 text-2xl">
+                                <div className="h-14 w-14 bg-transparent bg-opacity-20 rounded-full flex items-center justify-center mb-4 text-2xl">
                                     {benefit.icon}
                                 </div>
                                 <p className="text-blue-100">{benefit.text}</p>
