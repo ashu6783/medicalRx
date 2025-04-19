@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState,useMemo } from 'react';
 import Typed from 'typed.js';
 import { motion } from 'framer-motion';
 
@@ -99,6 +99,7 @@ export default function Home() {
         { icon: "🔒", text: "Secure and private virtual consultations." },
         { icon: "📱", text: "Smart tracking to improve medication adherence and recovery." }
     ];
+    
 
     // Animation variants
     const containerVariants = {
@@ -111,6 +112,17 @@ export default function Home() {
             }
         }
     };
+    const circles = useMemo(() => (
+        [...Array(20)].map(() => ({
+            width: Math.random() * 100 + 50,
+            height: Math.random() * 100 + 50,
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            x: Math.random() * 100 - 50,
+            y: Math.random() * 100 - 50,
+            duration: Math.random() * 10 + 20,
+        }))
+    ), []);
 
     const itemVariants = {
         hidden: { y: 20, opacity: 0 },
@@ -121,33 +133,33 @@ export default function Home() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-[#] via-blue-900 to-gray-900 text-white">
+        <div className="min-h-screen bg-gradient-to-b from-[#] via-[#17043c] to-gray-900 text-white">
             {/* Hero Section with Particles Background */}
             <div className="relative overflow-hidden">
                 {/* Animated circles in background */}
-                <div className="absolute inset-0 overflow-hidden">
-                    {[...Array(20)].map((_, i) => (
-                        <motion.div
-                            key={i}
-                            className="absolute rounded-full bg-blue-500 opacity-10"
-                            style={{
-                                width: Math.random() * 100 + 50,
-                                height: Math.random() * 100 + 50,
-                                left: `${Math.random() * 100}%`,
-                                top: `${Math.random() * 100}%`,
-                            }}
-                            animate={{
-                                y: [0, Math.random() * 100 - 50],
-                                x: [0, Math.random() * 100 - 50],
-                            }}
-                            transition={{
-                                repeat: Infinity,
-                                repeatType: "reverse",
-                                duration: Math.random() * 10 + 20,
-                            }}
-                        />
-                    ))}
-                </div>
+                <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+            {circles.map((circle, i) => (
+                <motion.div
+                    key={i}
+                    className="absolute rounded-full bg-blue-300 opacity-10"
+                    style={{
+                        width: circle.width,
+                        height: circle.height,
+                        left: circle.left,
+                        top: circle.top,
+                    }}
+                    animate={{
+                        x: [0, circle.x],
+                        y: [0, circle.y],
+                    }}
+                    transition={{
+                        repeat: Infinity,
+                        repeatType: "reverse",
+                        duration: circle.duration,
+                    }}
+                />
+            ))}
+        </div>
 
                 {/* Hero Content */}
                 <div className="container mx-auto px-6 pt-16 pb-24 text-center">
