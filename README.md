@@ -13,7 +13,7 @@
 
 ## 📋 Overview
 
-**MedicalRx** is a comprehensive full-stack medical platform leveraging AI to transform healthcare delivery. Built for both patients and healthcare providers, the system offers:
+**MedicalRx** is a comprehensive full-stack medical platform leveraging AI to transform healthcare delivery. Built for patients, the system offers:
 
 - 🤖 AI-assisted diagnosis and prescription generation
 - 💊 Digital prescription management 
