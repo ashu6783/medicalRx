@@ -1,4 +1,4 @@
-import { User, Bed, FileText, Globe, Clock, AlertCircle, Phone, AlertTriangle, Accessibility, MapPin, Search, SearchCheck } from 'lucide-react';
+import { User,FileText,AlertCircle, Phone, AlertTriangle, MapPin, SearchCheck } from 'lucide-react';
 import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
