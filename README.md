@@ -13,7 +13,7 @@
 
 ## 📋 Overview
 
-**MedicalRx** is a comprehensive full-stack medical platform leveraging AI to transform healthcare delivery. Built for both patients and healthcare providers, the system offers:
+**MedicalRx** is a comprehensive full-stack medical platform leveraging AI to transform healthcare delivery. Built for patients, the system offers:
 
 - 🤖 AI-assisted diagnosis and prescription generation
 - 💊 Digital prescription management 
@@ -32,7 +32,7 @@
     </td>
     <td width="50%">
       <p align="center"><b>Dashboard Overview</b></p>
-      <img src="https://github.com/user-attachments/assets/4d0d1b34-a6f1-4827-9294-41f9c7d764eb" alt="Dashboard Overview">
+      <img src="https://github.com/user-attachments/assets/ca00d1da-2345-4e58-ae70-670b9c6939e4" alt="Dashboard Overview">
     </td>
   </tr>
   <tr>
