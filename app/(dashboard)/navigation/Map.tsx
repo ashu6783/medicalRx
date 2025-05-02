@@ -127,26 +127,6 @@ export default function Map() {
         };
       }
 
-      interface OverpassTags {
-        name?: string;
-        opening_hours?: string;
-        "opening_hours:covid19"?: string;
-        "addr:street"?: string;
-        "addr:housenumber"?: string;
-        "addr:city"?: string;
-        "addr:postcode"?: string;
-        phone?: string;
-        "contact:phone"?: string;
-        website?: string;
-        "contact:website"?: string;
-        wheelchair?: string;
-        emergency?: string;
-        operator?: string;
-        beds?: string;
-        insurance?: string;
-        languages?: string;
-        speciality?: string;
-      }
 
       interface LocationResult {
         lat: number;
