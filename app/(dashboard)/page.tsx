@@ -191,6 +191,7 @@ export default function Home() {
                             className="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-3 rounded-xl font-bold shadow-lg"
                             whileHover={{ scale: 1.05, boxShadow: "0 0 15px rgba(59, 130, 246, 0.5)" }}
                             whileTap={{ scale: 0.95 }}
+                            onClick={() => window.location.href = "/diagnosis"}
                         >
                             Start Diagnosis
                         </motion.button>
